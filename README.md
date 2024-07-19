@@ -2,16 +2,6 @@
 
 The Docker image to automatically run tests on Rexx solutions submitted to [Exercism].
 
-## Getting started
-
-Build the test runner, conforming to the [Test Runner interface specification](https://github.com/exercism/docs/blob/main/building/tooling/test-runners/interface.md).
-Update the files to match your track's needs. At the very least, you'll need to update `bin/run.sh`, `Dockerfile` and the test solutions in the `tests` directory
-
-- Tip: look for `TODO:` comments to point you towards code that need updating
-- Tip: look for `OPTIONAL:` comments to point you towards code that _could_ be useful
-- Tip: if it proves impossible for the Docker image to work on a read-only filesystem, remove the `--read-only` flag from the `bin/run-in-docker.sh` and `bin/run-tests-in-docker.sh` files.
-  We don't yet enforce a read-only file system in production, but we might in the future!
-
 ## Run the test runner
 
 To run the tests of a single solution, do the following:

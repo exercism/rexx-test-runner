@@ -15,6 +15,72 @@
 # Example:
 # ./bin/run.sh two-fer path/to/solution/folder/ path/to/output/directory/
 
+# Parse the unit test configuration file, and syntax check each function
+#  invocation.
+#  - Successful check (zero return code) sees not output emitted
+#  - Failing check (1 return code) sees metadata of failing function
+#     call assembled, and returned to the results file in JSON format
+syntax_check_slug() {
+    local slug="${1}"
+    local results_file="${2}"
+    local test_number=0
+    # Parse, extract, and execute each function call
+    sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" \
+      | while read func_call ; do
+            test_number=$(( test_number += 1 ))
+            echo 'result = '"${func_call}"';say result;exit 0' \
+               | cat ${slug}-toplevel.rexx - ${slug}.rexx | regina 2>/dev/null >/dev/null
+            # Trap the first failing execution
+            if [ $? -ne 0 ] ; then
+                # Re-run function call, capture output to file
+                echo 'result = '"${func_call}"'; say result; exit 0' \
+                   | cat ${slug}-toplevel.rexx - ${slug}.rexx > bad_file.rexx
+                regina bad_file.rexx 2>bad_output >/dev/null
+                # Assemble return data
+                echo "Test Number: ${test_number}" > output_file
+                cat bad_output >> output_file
+                echo 'Context:' >> output_file
+                cat -n bad_file.rexx >> output_file
+                # NOTE: Since using jq to generate JSON from text, no
+                #  need to escape double quotes, or replace newlines
+                ##  sed -i 's/"/\\"/g' output_file
+                ##  message=$(awk '{printf "%s\\n", $0}' output_file)
+                message=$(cat output_file)
+                jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+                # Cleanup temporary files
+                rm -f bad_file.rexx bad_output output_file 2>&1 >/dev/null
+                # Ensure failing code returned
+                return 1
+            fi
+        done
+}
+
+# Solution directory is copied to a build directory where:
+# - Solution is first syntax checked
+# - Failing syntax check sees results of first failing check emitted
+# - Successful syntax check sees unit tests executed, and test results
+#    emitted
+test_slug() {
+    local slug="${1}"
+    local solution_dir="${2}"
+    local results_file="${3}"
+    # Copy exercise directory contents to temporary build directory
+    local build_dir="$(mktemp -d)"
+    cp "${solution_dir}"/* "${build_dir}"/
+    # Run tests, generate and emit output, collect result code
+    cd "${build_dir}"/ 2>&1 >/dev/null
+    # Perform check for syntax and runtime errors
+    if syntax_check_slug ${slug} ${results_file} ; then
+      # Perform the unit tests proper on 'error'-free code
+      ./runt --regina --json ${slug}-check ${slug} ${slug}-toplevel > ${results_file}
+    fi
+    local result=$?
+    cd - 2>&1 >/dev/null
+    # Cleanup and return result code
+    rm -rf "${build_dir}" 2>&1 >/dev/null
+    return ${result}
+}
+
 # If any required arguments is missing, print the usage and exit
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
     echo "usage: ./bin/run.sh exercise-slug path/to/solution/folder/ path/to/output/directory/"
@@ -29,32 +95,8 @@ results_file="${output_dir}/results.json"
 # Create the output directory if it doesn't exist
 mkdir -p "${output_dir}"
 
+# Run the tests, generating appropriate output
 echo "${slug}: testing..."
-
-# Run the tests for the provided implementation file and redirect stdout and
-# stderr to capture it
-test_output=$(false)
-# TODO: substitute "false" with the actual command to run the test:
-# test_output=$(command_to_run_tests 2>&1)
-
-# Write the results.json file based on the exit code of the command that was 
-# just executed that tested the implementation file
-if [ $? -eq 0 ]; then
-    jq -n '{version: 1, status: "pass"}' > ${results_file}
-else
-    # OPTIONAL: Sanitize the output
-    # In some cases, the test output might be overly verbose, in which case stripping
-    # the unneeded information can be very helpful to the student
-    # sanitized_test_output=$(printf "${test_output}" | sed -n '/Test results:/,$p')
-
-    # OPTIONAL: Manually add colors to the output to help scanning the output for errors
-    # If the test output does not contain colors to help identify failing (or passing)
-    # tests, it can be helpful to manually add colors to the output
-    # colorized_test_output=$(echo "${test_output}" \
-    #      | GREP_COLOR='01;31' grep --color=always -E -e '^(ERROR:.*|.*failed)$|$' \
-    #      | GREP_COLOR='01;32' grep --color=always -E -e '^.*passed$|$')
-
-    jq -n --arg output "${test_output}" '{version: 1, status: "fail", message: $output}' > ${results_file}
-fi
-
+test_slug ${slug} ${solution_dir} ${results_file}
 echo "${slug}: done"
+
