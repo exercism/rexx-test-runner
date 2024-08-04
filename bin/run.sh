@@ -66,7 +66,7 @@ test_slug() {
     local results_file="${3}"
     # Copy exercise directory contents to temporary build directory
     local build_dir="$(mktemp -d)"
-    cp "${solution_dir}"/* "${build_dir}"/
+    cp -rp "${solution_dir}"/* "${build_dir}"/
     # Run tests, generate and emit output, collect result code
     cd "${build_dir}"/ 2>&1 >/dev/null
     # Perform check for syntax and runtime errors
