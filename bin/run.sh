@@ -72,7 +72,7 @@ test_slug() {
     # Perform check for syntax and runtime errors
     if syntax_check_slug ${slug} ${results_file} ; then
       # Perform the unit tests proper on 'error'-free code
-      ./runt --regina --json ${slug}-check ${slug} ${slug}-toplevel > ${results_file}
+      ./test-${slug} --regina --json > ${results_file}
     fi
     local result=$?
     cd - 2>&1 >/dev/null
