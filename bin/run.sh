@@ -24,6 +24,13 @@ syntax_check_slug() {
     local slug="${1}"
     local results_file="${2}"
     local test_number=0
+    # Check for an empty slug (after stripping comments, and blank lines)
+    local slug_code_lines=$(sed -r ':a; s%(.*)/\*.*\*/%\1%; ta; /\/\*/ !b; N; ba' ${slug}.rexx | sed -r '/^\s*$/d' | wc -l)
+    if [ $slug_code_lines -lt 1 ] ; then
+        message='Empty solution file may not be submitted'
+        jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+        return 1
+    fi
     # Parse, extract, and execute each function call
     sed -n '/\/\* Test Variables \*\//,/\/\* Unit tests \*\//p' ${slug}-check.rexx > ${slug}-vars.rexx
     sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" \
