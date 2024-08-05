@@ -40,6 +40,12 @@ syntax_check_slug() {
             return 1
         fi
     done < tmpfile
+    # Check for a complete, executable test harness
+    if grep -q "context('Checking the FUNCNAME function')" ${slug}-check.rexx ; then
+        message='Incomplete test harness detected'
+        jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+        return 1
+    fi
     # Parse, extract, and execute each function call
     sed -n '/\/\* Test Variables \*\//,/\/\* Unit tests \*\//p' ${slug}-check.rexx > ${slug}-vars.rexx
     sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" \
