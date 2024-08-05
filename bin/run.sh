@@ -25,16 +25,17 @@ syntax_check_slug() {
     local results_file="${2}"
     local test_number=0
     # Parse, extract, and execute each function call
+    sed -n '/\/\* Test Variables \*\//,/\/\* Unit tests \*\//p' ${slug}-check.rexx > ${slug}-vars.rexx
     sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" \
       | while read func_call ; do
             test_number=$(( test_number += 1 ))
             echo 'result = '"${func_call}"';say result;exit 0' \
-               | cat ${slug}-toplevel.rexx - ${slug}.rexx | regina 2>/dev/null >/dev/null
+               | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx | regina 2>/dev/null >/dev/null
             # Trap the first failing execution
             if [ $? -ne 0 ] ; then
                 # Re-run function call, capture output to file
                 echo 'result = '"${func_call}"'; say result; exit 0' \
-                   | cat ${slug}-toplevel.rexx - ${slug}.rexx > bad_file.rexx
+                   | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx > bad_file.rexx
                 regina bad_file.rexx 2>bad_output >/dev/null
                 # Assemble return data
                 echo "Test Number: ${test_number}" > output_file
@@ -48,11 +49,13 @@ syntax_check_slug() {
                 message=$(cat output_file)
                 jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
                 # Cleanup temporary files
-                rm -f bad_file.rexx bad_output output_file 2>&1 >/dev/null
+                rm -f bad_file.rexx bad_output output_file ${slug}-vars.rexx 2>&1 >/dev/null
                 # Ensure failing code returned
                 return 1
             fi
         done
+        # Cleanup temporary file
+        rm -f ${slug}-vars.rexx 2>&1 >/dev/null
 }
 
 # Solution directory is copied to a build directory where:
