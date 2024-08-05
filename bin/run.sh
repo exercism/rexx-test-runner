@@ -31,6 +31,15 @@ syntax_check_slug() {
         jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
         return 1
     fi
+    # Check that functions invoked in the test harness exist in the exercise file
+    sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" | sed -E 's/^(.*)\(.*/\1/g' | sed -E '/\(/d' | uniq > tmpfile
+    while read func ; do
+        if ! grep -q "${func}\s*:" ${slug}.rexx ; then
+            message="Function ${func} does not exist in exercise file"
+            jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+            return 1
+        fi
+    done < tmpfile
     # Parse, extract, and execute each function call
     sed -n '/\/\* Test Variables \*\//,/\/\* Unit tests \*\//p' ${slug}-check.rexx > ${slug}-vars.rexx
     sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" \
@@ -62,7 +71,7 @@ syntax_check_slug() {
             fi
         done
         # Cleanup temporary file
-        rm -f ${slug}-vars.rexx 2>&1 >/dev/null
+        rm -f ${slug}-vars.rexx tmpfile 2>&1 >/dev/null
 }
 
 # Solution directory is copied to a build directory where:
