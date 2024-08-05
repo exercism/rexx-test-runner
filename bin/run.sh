@@ -46,38 +46,46 @@ syntax_check_slug() {
         jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
         return 1
     fi
-    # Parse, extract, and execute each function call
+    # Extract test variables
     sed -n '/\/\* Test Variables \*\//,/\/\* Unit tests \*\//p' ${slug}-check.rexx > ${slug}-vars.rexx
-    sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" \
-      | while read func_call ; do
-            test_number=$(( test_number += 1 ))
-            echo 'result = '"${func_call}"';say result;exit 0' \
-               | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx | regina 2>/dev/null >/dev/null
-            # Trap the first failing execution
-            if [ $? -ne 0 ] ; then
-                # Re-run function call, capture output to file
-                echo 'result = '"${func_call}"'; say result; exit 0' \
-                   | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx > bad_file.rexx
-                regina bad_file.rexx 2>bad_output >/dev/null
-                # Assemble return data
-                echo "Test Number: ${test_number}" > output_file
-                cat bad_output >> output_file
-                echo 'Context:' >> output_file
-                cat -n bad_file.rexx >> output_file
-                # NOTE: Since using jq to generate JSON from text, no
-                #  need to escape double quotes, or replace newlines
-                ##  sed -i 's/"/\\"/g' output_file
-                ##  message=$(awk '{printf "%s\\n", $0}' output_file)
-                message=$(cat output_file)
-                jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
-                # Cleanup temporary files
-                rm -f bad_file.rexx bad_output output_file ${slug}-vars.rexx 2>&1 >/dev/null
-                # Ensure failing code returned
-                return 1
-            fi
-        done
-        # Cleanup temporary file
-        rm -f ${slug}-vars.rexx tmpfile 2>&1 >/dev/null
+
+    # Parse, extract, and execute each function call
+    sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" > tmpfile
+
+    while read func_call ; do
+        test_number=$(( test_number += 1 ))
+        echo 'result = '"${func_call}"';say result;exit 0' \
+           | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx | regina -tO 2>/dev/null >/dev/null
+        # Trap the first failing execution
+        if [ $? -ne 0 ] ; then
+            # Re-run function call, capture output to file
+            echo 'result = '"${func_call}"'; say result; exit 0' \
+               | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx > bad_file.rexx
+            regina -tO bad_file.rexx 2>bad_output >/dev/null
+
+            # Remove per-execution unique paths
+            sed -Ei 's/running(.*)bad_file/running bad_file/' bad_output
+
+            # Assemble return data
+            echo "Test Number: ${test_number}" > output_file
+            cat bad_output >> output_file
+            echo 'Context:' >> output_file
+            cat -n bad_file.rexx >> output_file
+            # NOTE: Since using jq to generate JSON from text, no
+            #  need to escape double quotes, or replace newlines
+            ##  sed -i 's/"/\\"/g' output_file
+            ##  message=$(awk '{printf "%s\\n", $0}' output_file)
+            message=$(cat output_file)
+            jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+            # Cleanup temporary files
+            rm -f bad_file.rexx bad_output output_file ${slug}-vars.rexx 2>&1 >/dev/null
+            # Ensure failing code returned
+            return 1
+        fi
+    done < tmpfile
+
+    # Cleanup temporary files
+    rm -f ${slug}-vars.rexx tmpfile 2>&1 >/dev/null
 }
 
 # Solution directory is copied to a build directory where:
