@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+
+# -----------------------------------------------------------------------------
+# Script runner for t.rexx
+#
+# $1 -> the test script (rexx)
+# $2 -> the application to test (rexx)
+# $3 -> optional shared variable definitions file (rexx)
+# $4 -> optional custom testing functions definitions file (rexx)
+#
+# This script concatenates the files:
+#
+#   t1.rexx + ${1}.rexx + t2.rexx + ${2}.rexx + t3.rexx
+#
+# or, if optional file specified:
+#
+#   ${3}.rexx + t1.rexx + ${1}.rexx + t2.rexx + ${2}.rexx + t3.rexx
+#
+# or, if both optional files specified:
+#
+#   ${3}.rexx + t1.rexx + ${1}.rexx + t2.rexx + ${2}.rexx + ${4}.rexx + t3.rexx
+#
+# and executes the resulting test runner file. The return code from the
+# test runner is passed back to the command-line. Valid return code values:
+#
+# - 0        -> value indicates success, all tests passed
+# - positive -> value indicates failure, value equals number of failed tests
+#
+# Revision History:
+#
+# Date          Version     Author              Description
+# ----------    -------     ----------------    -------------------------------
+# 2015-04-03      0.0.1     Dave Nicolette      Initial implementation.
+# 2023-02-07      0.0.2     Anthony J. Borla    Return return code.
+# 2023-02-08      0.0.3     Anthony J. Borla    Pass TAP option to runner.
+# 2023-02-09      0.0.4     Anthony J. Borla    Revised header content.
+# 2023-02-10      0.0.5     Anthony J. Borla    Fix hard-coded test runner.
+# 2023-02-10      0.1.0     Anthony J. Borla    Port help, and usage functions.
+# 2023-02-10      0.2.0     Anthony J. Borla    Add argument and file checks.
+# 2023-02-10      0.3.0     Anthony J. Borla    Add TAP and KEEP options.
+# 2023-02-10      0.4.0     Anthony J. Borla    Activate KEEP functionality.
+# 2023-02-10      0.4.1     Anthony J. Borla    Revised commentary.
+# 2023-02-15      0.4.2     Anthony J. Borla    Altered shebang.
+# 2023-04-13      0.5.0     Anthony J. Borla    Added regina support.
+# 2023-04-14      0.6.0     Anthony J. Borla    Added JSON option.
+# 2023-04-15      0.7.0     Anthony J. Borla    Added toplevel support.
+# 2023-04-15      0.7.1     Anthony J. Borla    Revise header commentary.
+# 2024-07-27      0.7.2     Anthony J. Borla    Support test functions.
+# -----------------------------------------------------------------------------
+
+# ---- Constants
+
+RUNNER="t.rexx"
+INTERPRETER="rexx"
+
+# ---- Functions
+
+usage() {
+    echo "Usage: ${0} [-h | --help] | [--keep] [--tap|--json] [--regina] test source [toplevel] [checkfuncs]"
+}
+
+help() {
+    echo 'Executes t-rexx unit test runner using supplied Rexx test script on specified Rexx source file.'
+    echo ' * ${1} is the test script name, ${2} is the source file (code under test), both sans .rexx extension'
+    echo ' * ${3} is an optional Rexx file containing variables shared by the code under test (sans .rexx extension)'
+    echo ' * ${4} is another optional Rexx file containing custom functions used in testing'
+    echo ' * --tap option generates TAP-compliant output; default is verbose report style'
+    echo ' * --json option packages report style output as a JSON array (incompatible with --tap option)'
+    echo ' * --keep option ensures the generated test runner is not deleted'
+    echo ' * --regina option activates the regina interpreter (for shared library support)'
+    echo ' * Return code zero on test run success; positive-valued return code equals number of failed tests'
+    echo ' * Expects "rexx" interpreter to be available'
+    echo ' * Expects t-rexx component files, t1.rexx, t2.rexx, and t3.rexx, co-resident with test and source'
+    echo
+}
+
+error() {
+    >&2 echo "Error: ${1}"
+    >&2 usage
+    exit 1
+}
+
+# ---- Entry point
+
+# Was help requested ?
+[ "${1}" == "--help" -o "${1}" == "-h" ] && { help ; usage ; exit 0 ; }
+
+# Otherwise check for option parameters
+while (( "$#" )) ; do
+    case "${1}" in
+        --keep)       KEEP=KEEP ; shift ;;
+        --tap)        TAP=TAP ; shift ;;
+        --json)       JSON=JSON ; shift ;;
+        --regina)     INTERPRETER="regina" ; shift ;;
+        *) break ;;
+    esac
+done
+
+# Report options error if both --tap and --json options requested
+[ -n "${TAP}" -a -n "${JSON}" ] && error 'Incorrect option combination: either --tap or --json, not both'
+
+# Expecting two, or three, positional parameters; bail if not supplied
+[ "$#" -ne "2" -a "$#" -ne "3" -a "$#" -ne "4" ] && error 'Incorrect arguments'
+
+# Expecting each positional parameter to be a Rexx filename
+[ -f "${1}.rexx" ] || error "Missing test script - ${1}.rexx"
+[ -f "${2}.rexx" ] || error "Missing source file - ${2}.rexx"
+[ "$#" -eq "4" ] && { [ -f "${4}.rexx" ] || error "Missing checkfuncs file - ${4}.rexx" ; }
+[ "$#" -eq "3" ] && { [ -f "${3}.rexx" ] || error "Missing toplevel file - ${3}.rexx" ; }
+
+# Assemble test runner from components and supplied files
+case "$#" in
+    4) cat "${3}.rexx" t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" "${4}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null ;;
+    3) cat "${3}.rexx" t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null ;;
+    *) cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null ;;
+esac
+
+# Set output option
+[ -n "${TAP}" ] && OUT="${TAP}"
+[ -n "${JSON}" ] && OUT="${JSON}"
+
+# Execute test runner with output option
+# - "${OUT}"=="JSON" -> JSON output
+# - "${OUT}"=="TAP"  -> TAP output
+# - "${OUT}"==""     -> REPORT output
+"${INTERPRETER}" "${RUNNER}" "${OUT}"
+
+# Ensure test runner return code passed back to command-line
+RC="$?"
+
+# Unless KEEP option is set, delete the test runner
+[ "${KEEP}" != "KEEP" ] && rm -fr "${RUNNER}" 2>&1 >/dev/null
+
+# Return code from test runner
+exit "${RC}"
+
