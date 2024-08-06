@@ -1,0 +1,215 @@
+{
+  "version": 3,
+  "status": "fail",
+  "message": null,
+  "tests": [
+    {
+      "name": "stating something",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"Tom-ay-to, tom-aaaah-to.\") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "shouting",
+      "status": "fail",
+      "message": "Expected Whoa, chill out! but got ''",
+      "output": "",
+      "test_code": "Hey(\"WATCH OUT!\") = 'Whoa, chill out!'",
+      "task_id": 1
+    },
+    {
+      "name": "shouting gibberish",
+      "status": "fail",
+      "message": "Expected Whoa, chill out! but got ''",
+      "output": "",
+      "test_code": "Hey(\"FCECDFCAAB\") = 'Whoa, chill out!'",
+      "task_id": 1
+    },
+    {
+      "name": "asking a question",
+      "status": "fail",
+      "message": "Expected Sure. but got ''",
+      "output": "",
+      "test_code": "Hey(\"Does this cryogenic chamber make me look fat?\") = 'Sure.'",
+      "task_id": 1
+    },
+    {
+      "name": "asking a numeric question",
+      "status": "fail",
+      "message": "Expected Sure. but got ''",
+      "output": "",
+      "test_code": "Hey(\"You are, what, like 15?\") = 'Sure.'",
+      "task_id": 1
+    },
+    {
+      "name": "asking gibberish",
+      "status": "fail",
+      "message": "Expected Sure. but got ''",
+      "output": "",
+      "test_code": "Hey(\"fffbbcbeab?\") = 'Sure.'",
+      "task_id": 1
+    },
+    {
+      "name": "talking forcefully",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"Hi there!\") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "using acronyms in regular speech",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"ItS OK IF YOU DONt want to go work for NASA.\") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "forceful question",
+      "status": "fail",
+      "message": "Expected Calm down, I know what I'm doing! but got ''",
+      "output": "",
+      "test_code": "Hey(\"WHAT'S GOING ON?\") = 'Calm down, I know what I'm doing!'",
+      "task_id": 1
+    },
+    {
+      "name": "shouting numbers",
+      "status": "fail",
+      "message": "Expected Whoa, chill out! but got ''",
+      "output": "",
+      "test_code": "Hey(\"1, 2, 3 GO!\") = 'Whoa, chill out!'",
+      "task_id": 1
+    },
+    {
+      "name": "no letters",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"1, 2, 3\") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "question with no letters",
+      "status": "fail",
+      "message": "Expected Sure. but got ''",
+      "output": "",
+      "test_code": "Hey(\"4?\") = 'Sure.'",
+      "task_id": 1
+    },
+    {
+      "name": "shouting with special characters",
+      "status": "fail",
+      "message": "Expected Whoa, chill out! but got ''",
+      "output": "",
+      "test_code": "Hey(\"ZOMG THE %^*@#$(*^ ZOMBIES ARE COMING!!11!!1!\") = 'Whoa, chill out!'",
+      "task_id": 1
+    },
+    {
+      "name": "shouting with no exclamation mark",
+      "status": "fail",
+      "message": "Expected Whoa, chill out! but got ''",
+      "output": "",
+      "test_code": "Hey(\"I HATE THE DENTIST\") = 'Whoa, chill out!'",
+      "task_id": 1
+    },
+    {
+      "name": "statement containing question mark",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"Ending with ? means a question.\") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "non-letters with question",
+      "status": "fail",
+      "message": "Expected Sure. but got ''",
+      "output": "",
+      "test_code": "Hey(\":) ?\") = 'Sure.'",
+      "task_id": 1
+    },
+    {
+      "name": "prattling on",
+      "status": "fail",
+      "message": "Expected Sure. but got ''",
+      "output": "",
+      "test_code": "Hey(\"Wait! Hang on. Are you going to be OK?\") = 'Sure.'",
+      "task_id": 1
+    },
+    {
+      "name": "silence",
+      "status": "fail",
+      "message": "Expected Fine. Be that way! but got ''",
+      "output": "",
+      "test_code": "Hey(\"\") = 'Fine. Be that way!'",
+      "task_id": 1
+    },
+    {
+      "name": "prolonged silence",
+      "status": "fail",
+      "message": "Expected Fine. Be that way! but got ''",
+      "output": "",
+      "test_code": "Hey(\"                 \") = 'Fine. Be that way!'",
+      "task_id": 1
+    },
+    {
+      "name": "alternate silence",
+      "status": "fail",
+      "message": "Expected Fine. Be that way! but got ''",
+      "output": "",
+      "test_code": "Hey(COPIES(\"09\"X, 10)) = 'Fine. Be that way!'",
+      "task_id": 1
+    },
+    {
+      "name": "multiple line question",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"0A\"X||\"Does this cryogenic chamber make me look fat?\"||\"0A\"X||\"No\") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "starting with whitespace",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"                hmmmmmmm...\") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "ending with whitespace",
+      "status": "fail",
+      "message": "Expected Sure. but got ''",
+      "output": "",
+      "test_code": "Hey(\"Okay if like my         spacebar  quite a bit?   \") = 'Sure.'",
+      "task_id": 1
+    },
+    {
+      "name": "other whitespace",
+      "status": "fail",
+      "message": "Expected Fine. Be that way! but got ''",
+      "output": "",
+      "test_code": "Hey(\"0A\"X||\"0D\"X||\" \"||\"09\"X) = 'Fine. Be that way!'",
+      "task_id": 1
+    },
+    {
+      "name": "non-question ending with whitespace",
+      "status": "fail",
+      "message": "Expected Whatever. but got ''",
+      "output": "",
+      "test_code": "Hey(\"This is a statement ending with whitespace             \") = 'Whatever.'",
+      "task_id": 1
+    },
+    {
+      "name": "no input is silence",
+      "status": "fail",
+      "message": "Expected Fine. Be that way! but got ''",
+      "output": "",
+      "test_code": "Hey() = 'Fine. Be that way!'",
+      "task_id": 1
+    }
+  ]
+}
