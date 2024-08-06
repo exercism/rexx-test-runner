@@ -1,0 +1,3 @@
+LargestSeriesProduct : procedure
+  nop
+return ''
