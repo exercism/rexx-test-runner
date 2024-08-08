@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Synopsis:
 # Run the test runner on a solution.
@@ -61,7 +61,7 @@ syntax_check_slug() {
             # Re-run function call, capture output to file
             echo 'result = '"${func_call}"'; say result; exit 0' \
                | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx > bad_file.rexx
-            regina -tO bad_file.rexx 2>bad_output >/dev/null
+            regina -tO ./bad_file.rexx 2>bad_output >/dev/null
 
             # Remove per-execution unique paths
             sed -Ei 's/running(.*)bad_file/running bad_file/' bad_output
@@ -105,7 +105,10 @@ test_slug() {
     # Perform check for syntax and runtime errors
     if syntax_check_slug ${slug} ${results_file} ; then
       # Perform the unit tests proper on 'error'-free code
-      ./test-${slug} --regina --json > ${results_file}
+      cd "testlib" 2>&1 >/dev/null
+          cat ../"${slug}-toplevel.rexx" t1.rexx ../"${slug}-check.rexx" t2.rexx ../"${slug}.rexx" "${slug}-funcs.rexx" t3.rexx > ./t.rexx 2>/dev/null
+          regina ./t.rexx "JSON" > ${results_file}
+      cd - 2>&1 >/dev/null
     fi
     local result=$?
     cd - 2>&1 >/dev/null
