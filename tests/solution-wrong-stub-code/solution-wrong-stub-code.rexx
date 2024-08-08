@@ -1,0 +1,3 @@
+Bey : procedure
+  nop
+return ''

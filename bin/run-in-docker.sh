@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Synopsis:
 # Run the test runner on a solution using the test runner Docker image.
@@ -43,4 +43,4 @@ docker run \
     --mount type=bind,src="${solution_dir}",dst=/solution \
     --mount type=bind,src="${output_dir}",dst=/output \
     --mount type=tmpfs,dst=/tmp \
-    exercism/rexx-test-runner "${slug}" /solution /output 
+    exercism/rexx-test-runner "${slug}" /solution /output
