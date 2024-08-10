@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Synopsis:
 # Run the test runner on a solution.
@@ -24,35 +24,68 @@ syntax_check_slug() {
     local slug="${1}"
     local results_file="${2}"
     local test_number=0
+    # Check for an empty slug (after stripping comments, and blank lines)
+    local slug_code_lines=$(sed -r ':a; s%(.*)/\*.*\*/%\1%; ta; /\/\*/ !b; N; ba' ${slug}.rexx | sed -r '/^\s*$/d' | wc -l)
+    if [ $slug_code_lines -lt 1 ] ; then
+        message='Empty solution file may not be submitted'
+        jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+        return 1
+    fi
+    # Check that functions invoked in the test harness exist in the exercise file
+    sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" | sed -E 's/^(.*)\(.*/\1/g' | sed -E '/\(/d' | uniq > tmpfile
+    while read func ; do
+        if ! grep -q "${func}\s*:" ${slug}.rexx ; then
+            message="Function ${func} does not exist in exercise file"
+            jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+            return 1
+        fi
+    done < tmpfile
+    # Check for a complete, executable test harness
+    if grep -q "context('Checking the FUNCNAME function')" ${slug}-check.rexx ; then
+        message='Incomplete test harness detected'
+        jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+        return 1
+    fi
+    # Extract test variables
+    sed -n '/\/\* Test Variables \*\//,/\/\* Unit tests \*\//p' ${slug}-check.rexx > ${slug}-vars.rexx
+
     # Parse, extract, and execute each function call
-    sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" \
-      | while read func_call ; do
-            test_number=$(( test_number += 1 ))
-            echo 'result = '"${func_call}"';say result;exit 0' \
-               | cat ${slug}-toplevel.rexx - ${slug}.rexx | regina 2>/dev/null >/dev/null
-            # Trap the first failing execution
-            if [ $? -ne 0 ] ; then
-                # Re-run function call, capture output to file
-                echo 'result = '"${func_call}"'; say result; exit 0' \
-                   | cat ${slug}-toplevel.rexx - ${slug}.rexx > bad_file.rexx
-                regina bad_file.rexx 2>bad_output >/dev/null
-                # Assemble return data
-                echo "Test Number: ${test_number}" > output_file
-                cat bad_output >> output_file
-                echo 'Context:' >> output_file
-                cat -n bad_file.rexx >> output_file
-                # NOTE: Since using jq to generate JSON from text, no
-                #  need to escape double quotes, or replace newlines
-                ##  sed -i 's/"/\\"/g' output_file
-                ##  message=$(awk '{printf "%s\\n", $0}' output_file)
-                message=$(cat output_file)
-                jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
-                # Cleanup temporary files
-                rm -f bad_file.rexx bad_output output_file 2>&1 >/dev/null
-                # Ensure failing code returned
-                return 1
-            fi
-        done
+    sed '/check/!d' ${slug}-check.rexx | sed -E "s/.*\s+'(.*)',,/\1/g" > tmpfile
+
+    while read func_call ; do
+        test_number=$(( test_number += 1 ))
+        echo 'result = '"${func_call}"';say result;exit 0' \
+           | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx | regina -tO 2>/dev/null >/dev/null
+        # Trap the first failing execution
+        if [ $? -ne 0 ] ; then
+            # Re-run function call, capture output to file
+            echo 'result = '"${func_call}"'; say result; exit 0' \
+               | cat ${slug}-toplevel.rexx ${slug}-vars.rexx - ${slug}.rexx testlib/${slug}-funcs.rexx > bad_file.rexx
+            regina -tO ./bad_file.rexx 2>bad_output >/dev/null
+
+            # Remove per-execution unique paths
+            sed -Ei 's/running(.*)bad_file/running bad_file/' bad_output
+
+            # Assemble return data
+            echo "Test Number: ${test_number}" > output_file
+            cat bad_output >> output_file
+            echo 'Context:' >> output_file
+            cat -n bad_file.rexx >> output_file
+            # NOTE: Since using jq to generate JSON from text, no
+            #  need to escape double quotes, or replace newlines
+            ##  sed -i 's/"/\\"/g' output_file
+            ##  message=$(awk '{printf "%s\\n", $0}' output_file)
+            message=$(cat output_file)
+            jq -n --arg message "${message}" '{version: 3, status: "error", message: $message}' > ${results_file}
+            # Cleanup temporary files
+            rm -f bad_file.rexx bad_output output_file ${slug}-vars.rexx 2>&1 >/dev/null
+            # Ensure failing code returned
+            return 1
+        fi
+    done < tmpfile
+
+    # Cleanup temporary files
+    rm -f ${slug}-vars.rexx tmpfile 2>&1 >/dev/null
 }
 
 # Solution directory is copied to a build directory where:
@@ -66,13 +99,16 @@ test_slug() {
     local results_file="${3}"
     # Copy exercise directory contents to temporary build directory
     local build_dir="$(mktemp -d)"
-    cp "${solution_dir}"/* "${build_dir}"/
+    cp -rp "${solution_dir}"/* "${build_dir}"/
     # Run tests, generate and emit output, collect result code
     cd "${build_dir}"/ 2>&1 >/dev/null
     # Perform check for syntax and runtime errors
     if syntax_check_slug ${slug} ${results_file} ; then
       # Perform the unit tests proper on 'error'-free code
-      ./runt --regina --json ${slug}-check ${slug} ${slug}-toplevel > ${results_file}
+      cd "testlib" 2>&1 >/dev/null
+          cat ../"${slug}-toplevel.rexx" t1.rexx ../"${slug}-check.rexx" t2.rexx ../"${slug}.rexx" "${slug}-funcs.rexx" t3.rexx > ./t.rexx 2>/dev/null
+          regina ./t.rexx "JSON" > ${results_file}
+      cd - 2>&1 >/dev/null
     fi
     local result=$?
     cd - 2>&1 >/dev/null
