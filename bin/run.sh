@@ -32,7 +32,7 @@ syntax_check_slug() {
         return 1
     fi
     # Check that functions invoked in the test harness exist in the exercise file
-    sed -n "s/^\s\s*'\(.*\)',,.*$/\1/p" ${slug}-check.rexx | sed -E 's/^(.*)\(.*/\1/g' | sed -E '/\(/d' | uniq > tmpfile
+    sed -n "s/^\s\s*'\(.*\)',,.*$/\1/p" "${slug}-check.rexx" | sed -E 's/^(.*)\(.*/\1/g; /\(/d' | uniq > tmpfile
     while read func ; do
         if ! grep -q "${func}\s*:" ${slug}.rexx ; then
             message="Function ${func} does not exist in exercise file"
@@ -47,10 +47,10 @@ syntax_check_slug() {
         return 1
     fi
     # Extract test preamble (options, variables, etc.)
-    sed -n '1,/\/\* Unit tests \*\//p' ${slug}-check.rexx | sed '/\/\* Unit tests \*\//d' > ${slug}-vars.rexx
+    sed -n '1,/\/\* Unit tests \*\//p' "${slug}-check.rexx" | sed '/\/\* Unit tests \*\//d' > "${slug}-vars.rexx"
 
     # Parse, extract, and execute each function call
-    sed -n "s/^\s\s*'\(.*\)',,.*$/\1/p" ${slug}-check.rexx > tmpfile
+    sed -n "s/^\s\s*'\(.*\)',,.*$/\1/p" "${slug}-check.rexx" > tmpfile
 
     while read func_call ; do
         test_number=$(( test_number += 1 ))
