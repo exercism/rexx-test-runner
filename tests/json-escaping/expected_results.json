@@ -1,0 +1,23 @@
+{
+  "version": 3,
+  "status": "pass",
+  "message": null,
+  "tests": [
+    {
+      "name": "reverses \"hello\"",
+      "status": "pass",
+      "message": "Expected olleh and got olleh",
+      "output": "",
+      "test_code": "Reverse(\"hello\") = 'olleh'",
+      "task_id": 1
+    },
+    {
+      "name": "reversed \"hello\" is not \"hello\"",
+      "status": "pass",
+      "message": "Expected hello and got olleh",
+      "output": "",
+      "test_code": "Reverse(\"hello\") \\= 'hello'",
+      "task_id": 1
+    }
+  ]
+}

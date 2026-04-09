@@ -1,0 +1,23 @@
+{
+  "version": 3,
+  "status": "pass",
+  "message": null,
+  "tests": [
+    {
+      "name": "result isn't zero",
+      "status": "pass",
+      "message": "Expected 0 and got 125",
+      "output": "",
+      "test_code": "Cube(5) \\= 0",
+      "task_id": 1
+    },
+    {
+      "name": "cubes a large number",
+      "status": "pass",
+      "message": "Expected 125000000000000 and got 125000000000000",
+      "output": "",
+      "test_code": "Cube(50000) = 125000000000000",
+      "task_id": 1
+    }
+  ]
+}
