@@ -8,7 +8,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"Tom-ay-to, tom-aaaah-to.\") \= 'Whatever.'",
+      "test_code": "Hey(\"Tom-ay-to, tom-aaaah-to.\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -16,7 +16,7 @@
       "status": "fail",
       "message": "Expected Whoa, chill out! but got Whoa, chill out!",
       "output": "",
-      "test_code": "Hey(\"WATCH OUT!\") \= 'Whoa, chill out!'",
+      "test_code": "Hey(\"WATCH OUT!\") \\= 'Whoa, chill out!'",
       "task_id": 1
     },
     {
@@ -24,7 +24,7 @@
       "status": "fail",
       "message": "Expected Whoa, chill out! but got Whoa, chill out!",
       "output": "",
-      "test_code": "Hey(\"FCECDFCAAB\") \= 'Whoa, chill out!'",
+      "test_code": "Hey(\"FCECDFCAAB\") \\= 'Whoa, chill out!'",
       "task_id": 1
     },
     {
@@ -32,7 +32,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\"Does this cryogenic chamber make me look fat?\") \= 'Sure.'",
+      "test_code": "Hey(\"Does this cryogenic chamber make me look fat?\") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -40,7 +40,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\"You are, what, like 15?\") \= 'Sure.'",
+      "test_code": "Hey(\"You are, what, like 15?\") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -48,7 +48,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\"fffbbcbeab?\") \= 'Sure.'",
+      "test_code": "Hey(\"fffbbcbeab?\") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -56,7 +56,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"Hi there!\") \= 'Whatever.'",
+      "test_code": "Hey(\"Hi there!\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -64,7 +64,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"ItS OK IF YOU DONt want to go work for NASA.\") \= 'Whatever.'",
+      "test_code": "Hey(\"ItS OK IF YOU DONt want to go work for NASA.\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -72,7 +72,7 @@
       "status": "fail",
       "message": "Expected Calm down, I know what I'm doing! but got Calm down, I know what I'm doing!",
       "output": "",
-      "test_code": "Hey(\"WHAT'S GOING ON?\") \= 'Calm down, I know what I'm doing!'",
+      "test_code": "Hey(\"WHAT'S GOING ON?\") \\= 'Calm down, I know what I'm doing!'",
       "task_id": 1
     },
     {
@@ -80,7 +80,7 @@
       "status": "fail",
       "message": "Expected Whoa, chill out! but got Whoa, chill out!",
       "output": "",
-      "test_code": "Hey(\"1, 2, 3 GO!\") \= 'Whoa, chill out!'",
+      "test_code": "Hey(\"1, 2, 3 GO!\") \\= 'Whoa, chill out!'",
       "task_id": 1
     },
     {
@@ -88,7 +88,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"1, 2, 3\") \= 'Whatever.'",
+      "test_code": "Hey(\"1, 2, 3\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -96,7 +96,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\"4?\") \= 'Sure.'",
+      "test_code": "Hey(\"4?\") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -104,7 +104,7 @@
       "status": "fail",
       "message": "Expected Whoa, chill out! but got Whoa, chill out!",
       "output": "",
-      "test_code": "Hey(\"ZOMG THE %^*@#$(*^ ZOMBIES ARE COMING!!11!!1!\") \= 'Whoa, chill out!'",
+      "test_code": "Hey(\"ZOMG THE %^*@#$(*^ ZOMBIES ARE COMING!!11!!1!\") \\= 'Whoa, chill out!'",
       "task_id": 1
     },
     {
@@ -112,7 +112,7 @@
       "status": "fail",
       "message": "Expected Whoa, chill out! but got Whoa, chill out!",
       "output": "",
-      "test_code": "Hey(\"I HATE THE DENTIST\") \= 'Whoa, chill out!'",
+      "test_code": "Hey(\"I HATE THE DENTIST\") \\= 'Whoa, chill out!'",
       "task_id": 1
     },
     {
@@ -120,7 +120,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"Ending with ? means a question.\") \= 'Whatever.'",
+      "test_code": "Hey(\"Ending with ? means a question.\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -128,7 +128,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\":) ?\") \= 'Sure.'",
+      "test_code": "Hey(\":) ?\") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -136,7 +136,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\"Wait! Hang on. Are you going to be OK?\") \= 'Sure.'",
+      "test_code": "Hey(\"Wait! Hang on. Are you going to be OK?\") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -144,7 +144,7 @@
       "status": "fail",
       "message": "Expected Fine. Be that way! but got Fine. Be that way!",
       "output": "",
-      "test_code": "Hey(\"\") \= 'Fine. Be that way!'",
+      "test_code": "Hey(\"\") \\= 'Fine. Be that way!'",
       "task_id": 1
     },
     {
@@ -152,7 +152,7 @@
       "status": "fail",
       "message": "Expected Fine. Be that way! but got Fine. Be that way!",
       "output": "",
-      "test_code": "Hey(\"                 \") \= 'Fine. Be that way!'",
+      "test_code": "Hey(\"                 \") \\= 'Fine. Be that way!'",
       "task_id": 1
     },
     {
@@ -160,7 +160,7 @@
       "status": "fail",
       "message": "Expected Fine. Be that way! but got Fine. Be that way!",
       "output": "",
-      "test_code": "Hey(COPIES(\"09\"X, 10)) \= 'Fine. Be that way!'",
+      "test_code": "Hey(COPIES(\"09\"X, 10)) \\= 'Fine. Be that way!'",
       "task_id": 1
     },
     {
@@ -168,7 +168,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"0A\"X||\"Does this cryogenic chamber make me look fat?\"||\"0A\"X||\"No\") \= 'Whatever.'",
+      "test_code": "Hey(\"0A\"X||\"Does this cryogenic chamber make me look fat?\"||\"0A\"X||\"No\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -176,7 +176,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"                hmmmmmmm...\") \= 'Whatever.'",
+      "test_code": "Hey(\"                hmmmmmmm...\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -184,7 +184,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\"Okay if like my         spacebar  quite a bit?   \") \= 'Sure.'",
+      "test_code": "Hey(\"Okay if like my         spacebar  quite a bit?   \") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -192,7 +192,7 @@
       "status": "fail",
       "message": "Expected Fine. Be that way! but got Fine. Be that way!",
       "output": "",
-      "test_code": "Hey(\"0A\"X||\"0D\"X||\" \"||\"09\"X) \= 'Fine. Be that way!'",
+      "test_code": "Hey(\"0A\"X||\"0D\"X||\" \"||\"09\"X) \\= 'Fine. Be that way!'",
       "task_id": 1
     },
     {
@@ -200,7 +200,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"This is a statement ending with whitespace             \") \= 'Whatever.'",
+      "test_code": "Hey(\"This is a statement ending with whitespace             \") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -208,7 +208,7 @@
       "status": "fail",
       "message": "Expected Fine. Be that way! but got Fine. Be that way!",
       "output": "",
-      "test_code": "Hey() \= 'Fine. Be that way!'",
+      "test_code": "Hey() \\= 'Fine. Be that way!'",
       "task_id": 1
     }
   ]

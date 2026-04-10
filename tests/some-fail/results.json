@@ -8,7 +8,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"Tom-ay-to, tom-aaaah-to.\") \= 'Whatever.'",
+      "test_code": "Hey(\"Tom-ay-to, tom-aaaah-to.\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -32,7 +32,7 @@
       "status": "fail",
       "message": "Expected Sure. but got Sure.",
       "output": "",
-      "test_code": "Hey(\"Does this cryogenic chamber make me look fat?\") \= 'Sure.'",
+      "test_code": "Hey(\"Does this cryogenic chamber make me look fat?\") \\= 'Sure.'",
       "task_id": 1
     },
     {
@@ -88,7 +88,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"1, 2, 3\") \= 'Whatever.'",
+      "test_code": "Hey(\"1, 2, 3\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -120,7 +120,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"Ending with ? means a question.\") \= 'Whatever.'",
+      "test_code": "Hey(\"Ending with ? means a question.\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -168,7 +168,7 @@
       "status": "fail",
       "message": "Expected Whatever. but got Whatever.",
       "output": "",
-      "test_code": "Hey(\"0A\"X||\"Does this cryogenic chamber make me look fat?\"||\"0A\"X||\"No\") \= 'Whatever.'",
+      "test_code": "Hey(\"0A\"X||\"Does this cryogenic chamber make me look fat?\"||\"0A\"X||\"No\") \\= 'Whatever.'",
       "task_id": 1
     },
     {
@@ -208,7 +208,7 @@
       "status": "fail",
       "message": "Expected Fine. Be that way! but got Fine. Be that way!",
       "output": "",
-      "test_code": "Hey() \= 'Fine. Be that way!'",
+      "test_code": "Hey() \\= 'Fine. Be that way!'",
       "task_id": 1
     }
   ]
