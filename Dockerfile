@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04@sha256:962f6cadeae0ea6284001009daa4cc9a8c37e75d1f5191cf0eb83fe565b63dd7
 
 ARG regina_url_prefix=https://sourceforge.net/projects/regina-rexx/files/regina-rexx/3.9.5
 ARG regina_bin_deb=regina-rexx_3.9.5-2_amd64-Debian-11.deb
